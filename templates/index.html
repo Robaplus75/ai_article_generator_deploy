@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Blog Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        .center {
+            height: 30vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .wave {
+            width: 5px;
+            height: 50px;
+            background: linear-gradient(45deg, lightgreen, green);
+            margin: 10px;
+            animation: wave 1s linear infinite;
+            border-radius: 20px;
+          }
+          .wave:nth-child(2) {
+            animation-delay: 0.1s;
+          }
+          .wave:nth-child(3) {
+            animation-delay: 0.2s;
+          }
+          .wave:nth-child(4) {
+            animation-delay: 0.3s;
+          }
+          .wave:nth-child(5) {
+            animation-delay: 0.4s;
+          }
+          .wave:nth-child(6) {
+            animation-delay: 0.5s;
+          }
+          .wave:nth-child(7) {
+            animation-delay: 0.6s;
+          }
+          .wave:nth-child(8) {
+            animation-delay: 0.7s;
+          }
+          .wave:nth-child(9) {
+            animation-delay: 0.8s;
+          }
+          .wave:nth-child(10) {
+            animation-delay: 0.9s;
+          }
+          
+          @keyframes wave {
+            0% {
+              transform: scale(0);
+            }
+            50% {
+              transform: scale(1);
+            }
+            100% {
+              transform: scale(0);
+            }
+          }
+    </style>
+</head>
+<body class='flex flex-col min-h-screen bg-gray-300 font-sans antialised'>
+    <!-- NavBar -->
+    <nav class='bg-green-600 p-4 mb-7 text-white flex justify-between '>
+        <div>
+            <h1 class='text-3xl font-bold'>AI Blog Generator</h1>
+        </div>
+        <div>
+          <a href="#" class="text-white hover:underline mx-4">Welcome {{user.username}}</a>
+          <a href='/blog-list' class="text-white hover:underline mx-4">Saved Blog Posts</a>
+          <a href='/logout' class="text-white hover:underline">Logout</a>
+      </div>
+    </nav>
+
+
+    <!-- Main -->
+    <div class='flex-grow container mx-auto mt-10 px-4 sm:px-0'>
+        <div class='max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105'>
+            <!-- Introduction SEction -->
+            <div class='text-center'>
+                <h2 class='text-2xl font-semibold mb-4'>Welcome to the AI Blog Generator</h2>
+                <p class='text-gray-700'>
+                    Generate high quality blog aricles from Youtube eideows usin gArtificail intellifence simple enter the link to the youtube video below and let the ai create the content for you Good Luck robel
+                </p>
+            </div>
+
+            <!-- Yourube Section-->
+            <div class='mt-5'>
+                <h2 class='text-xl mb-4 font-semibold'>EnterYoutube Video Link</h2>
+                <div class='flex space-x-4'>
+                    <input id='youtubeLink' type='url' placeholder='paste youtube link...' class='flex-grow p-2 border border-blue-400 rounded-l-md'>
+                    <button id='generatedBlogButton' class='bg-green-600 text-white px-4 py-2 rounded-r-md hover:bg-green-700 transition-colors'>Generate</button>
+                </div>
+            </div>
+            <!-- Generated Blog display Section -->
+            <section class='mt-10 flex-grow'>
+                <h2 class='text-xl mb-4 font-semibold'>Generated Blog Article</h2>
+                <div id='blogContent' class-'mt-2 text-gray-700 space-y-4'>
+                    
+                </div>
+            </section>
+
+            <!-- Section for loading Circle class="load" -->
+            <div id="loading-circle" class="center" style="display:none">
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+              <div class="wave"></div>
+          </div>
+
+        </div>
+    </div>
+    <footer class='text-center p-4 text-black mt-6'>
+        Powered by Robel
+    </footer>
+
+    <script>
+      document.getElementById('generatedBlogButton').addEventListener('click', async () => {
+        const youtubeLink = document.getElementById('youtubeLink').value;
+        const loading_circle = document.getElementById('loading-circle');
+        const loadingIndicator = document.getElementById('loading');
+        const blogContent = document.getElementById('blogContent');
+        const endpointUrl = '/generate-blog';
+
+        if (youtubeLink){
+          loading_circle.style.display = 'flex';
+          blogContent.innerHTML = ''
+
+          try{
+            const response = await fetch(endpointUrl, {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({ 'link': youtubeLink })
+            });
+
+            const data = await response.json();
+
+            blogContent.innerHTML = data.content;
+            loading_circle.style.display = 'none';
+          } catch (error){
+            console.error("Error occurred:", error);
+            alert("something went wrong. Please try again later.");
+            loading_circle.style.display = 'none';
+          }
+          
+        } else {
+          alert("Please Enter a Youtube Link");
+        }
+         
+
+
+
+      })
+    </script>
+
+</body>
+</html>
